@@ -9,41 +9,48 @@ sudoku::sudoku(){
 		map[i]=0;
 }
 }
-bool sudoku::checkUnity(int arr[]){//check 9 numbers
-	int ctrArr[9]={};
+bool sudoku::checkUnity(int arr[]){//check 12 numbers
+	int ctrArr[10]={};
 	for(int i=0;i<9;i++){
-		ctrArr[arr[i]-1]++;
-			}
-	for(int i=0;i<9;i++){
+		if(arr[i]==-1) ctrArr[0]++;
+		else ctrArr[arr[i]]++;
+	}
+	if(ctrArr[0]!=3) return false;
+	for(int i=1;i<10;i++){
 		if(ctrArr[i]!=1)
 			return false;	
 }
 	return true;
 }
 bool sudoku::isCorrect(int answerMap[]){
-	int checkArr[9];
-	for(int i=0;i<81;i+=9){         //check the row
-		for(int j=0;j<9;j++){    
+	int checkArr[12]={};
+	for(int i=0;i<144;i+=12){         //check the row
+		for(int j=0;j<12;j++){    
 			checkArr[j]=answerMap[i+j];
-}
+		}
 		if(checkUnity(checkArr)==false) return false;
-}
-	for(int i=0;i<9;i++){    //check the columns
-		for(int j=0;j<9;j++){
-			checkArr[i]=answerMap[i+j*9];
+	}
+	for(int i=0;i<12;i++){    //check the columns
+		for(int j=0;j<12;j++){
+			checkArr[i]=answerMap[i+j*12];
 }
 		if(checkUnity(checkArr==false)) return false;
 }
-	for(int i=0;i<9;i++){    //check the cell
-		for(int j=0;j<9;j++){
-			int a;
-			a=27*(i/3)+3*(i%3)+9*(j/3)+(j%3);           
-			checkArr[i]=answerMap[a];		
-}
-	if(checkUnity(checkArr)==false) return false;
-}
-}
-*/
+	for(int i=0;i<12;i+=12){    //check the cell
+		for(int j=0;j<12;j+=4){
+			int a=0;
+			for(int k=0;k<3;k++){
+				for(int t=0;t<3;t++){
+					checkArr[a]=answerMap[t+k];
+					a++;
+				}
+					
+			}
+		checkArr[9]=checkArr[10]=checkArr[11]=-1;
+		if(checkUnity(checkArr)==false) return false;
+		}
+	}
+return true;
 void sudoku::GiveQuestion(){
 	srand(time(0));
 	int space=36;
@@ -101,7 +108,7 @@ void sudoku::Solve(int Question[sudokuSize]){
 	for(int i=0;i<sudukuSize;i++){
 		if(Question[i]==0){
 			int tem=floor(i/12),rowCheck[10]={},colCheck[10]={},cellCheck[10]={};
-			int anotherSpace[sudokuSize]={},spaceCtr=0;
+			int temAnswer[12]={};
 			for(tem;tem<floor(i/12)+12;tem++){   //select row
 				if(Question[tem]>0)rowCheck[Question[tem]]++;
 				else if(Question[tem]==-1)rowCheck[0]++;
@@ -113,16 +120,49 @@ void sudoku::Solve(int Question[sudokuSize]){
 				else if(Question[tem]==0){anotherSpace[spaceCtr]==tem; spaceCtr++;}
 			}
 			for(){ //select cell
-
+		
 			}
 			
 			int chanceNumber[10];
 			for(int j=1;j<10;j++){ //test number
 				if(rowCheck[j]==0&&colCheck[j]==0&&cellCheck==[0]) chanceNumber[j]++;
 			}
+			for(int j=1;j<10;j++){
+				if(changeNumber[j]==1){
+					temAnswer[i]=j;
+					chanceNumber[j]=0;
+				}
+				break;
+			}
+	**	if((i+1)%12==0){//check row
+			for(int j=0;j<12;j++){
+				if(temAnswer[i]==0){
+				temAnswer[j]=Question[i-11+j];
+				}
+			}
+			if(checkUnity(check)==0){
+				
+			}
+		}
+		if((i+1)%36==0){// check cell
+			
 
-			int space=i; 
-			for(int j=0;j<10;j++){  //origin space
+
+
+
+		}
+			
+		
+
+
+
+		}
+			
+
+                                                                }
+		
+		} 
+			/*for(int j=0;j<10;j++){  //origin space
 				if(chanceNumber[j]==1)Question[space]=j;
 					rowCheck[j]==1;// 排除已用過的數
 					colCheck[j]==1;
@@ -162,7 +202,7 @@ void sudoku::Solve(int Question[sudokuSize]){
 							}
 						}
 						else break;
-						}
+						}*/
 					checkUnity()
 					
 
