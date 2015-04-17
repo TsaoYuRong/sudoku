@@ -4,7 +4,7 @@
 #include<iomanip>
 #include"sudoku.h"
 using namespace std;
-/*sudoku::sudoku(){
+sudoku::sudoku(){
 	for(int i=0;i<sudokuSize;i++){
 		map[i]=0;
 }
@@ -55,7 +55,7 @@ bool sudoku::isCorrect(int answerMap[]){
 				}
 			}
 return true;
-*/
+}
 void sudoku::GiveQuestion(){
 	srand(time(0));
 	int space=36;
@@ -102,7 +102,7 @@ void sudoku::GiveQuestion(){
         	if((i+1)%12==0)cout<<endl;
 }
 }
-/*void sudoku::Readin(int map[sudokuSize]){
+void sudoku::Readin(int map[sudokuSize]){
 	int readinQuestion[sudokuSize];	
 	for(int i=0;i<sudokuSize;i++){
 		 readinQuestion[i]=map[i];
@@ -111,35 +111,58 @@ void sudoku::GiveQuestion(){
 }
 void sudoku::Solve(int Question[sudokuSize]){
 	 int tem=floor(i/12),rowCheck[10]={},colCheck[10]={},cellCheck[10]={};
-         int temAnswer[12]={};
+         int temAnswer[sudokuSize]={};
 	for(int i=0;i<sudukuSize;i++){
 		if(Question[i]==0){
 			for(tem;tem<floor(i/12)+12;tem++){   //select row
 				if(Question[tem]>0)rowCheck[Question[tem]]++;
 				else if(Question[tem]==-1)rowCheck[0]++;
-				else if(Question[tem]==0){anotherSpace[sapceCtr]=tem; spaceCtr++;}
 			}
-			for(tem=i;tem<sudokuSize;tem+=12){//select column
+			for(tem=(i%12);tem<sudokuSize;tem+=12){//select column
 				if(Question[tem]>0) colCheck[Question[tem]]++;
 				else if (Question[tem]==-1) colCheck[0]++;
-				else if(Question[tem]==0){anotherSpace[spaceCtr]==tem; spaceCtr++;}
-			}
-			for(){ //select cell
-		
-			}
-			
-			int chanceNumber[10];
+			}		
+			tem=3((i%12)/3)+36((i/12)/3);		
+			for(int k=tem;k<tem+25;k+=12){ //select cell                    		
+                             	for(int t=0;t<3;t++){
+                                   	if(Question[tem+t]>0)cellCheck[Question[tem]]++;
+					else if(Question[tem+t]==-1)cellCheck[0]++;
+                                			}
+                       				 }
+                       									
+			int chanceNumber[10]={},ctr=0;
 			for(int j=1;j<10;j++){ //test number
-				if(rowCheck[j]==0&&colCheck[j]==0&&cellCheck==[0]) chanceNumber[j]++;
+				if(rowCheck[j]==0&&colCheck[j]==0&&cellCheck==[0]) {
+					chanceNumber[ctr]=j;
+					ctr++;
+				}
 			}
-			for(int j=1;j<10;j++){
+			if(chanceNumber[1]==0)	Question[i]=chanceNumber[0];//只有一個可能
+			
+			else {//有兩個以上可能
+				for(int j=0;j<9;j++){
+					
+				}
+
+
+			} 
+				
+				
+			
+
+
+
+
+
+
+				for(int j=1;j<10;j++){
 				if(chanceNumber[j]==1){
 					temAnswer[i]=j;
 					chanceNumber[j]=0;
 				}
 				break;
 			}
-	**	if((i+1)%12==0){//check row
+		if((i+1)%12==0){//check row
 			for(int j=0;j<12;j++){
 				if(temAnswer[i]==0){
 				temAnswer[j]=Question[i-11+j];
@@ -149,7 +172,7 @@ void sudoku::Solve(int Question[sudokuSize]){
 				
 			}
 		}
-		if((i+1)%36==0){// check cell
+		if((i+1)%36==0){
 			
 
 
@@ -164,64 +187,8 @@ void sudoku::Solve(int Question[sudokuSize]){
 		}
 			
 
-                                                                }
-		
-		} 
-			/*for(int j=0;j<10;j++){  //origin space
-				if(chanceNumber[j]==1)Question[space]=j;
-					rowCheck[j]==1;// 排除已用過的數
-					colCheck[j]==1;
-					cellCheck[j]==1;
-					
-					for(int k=0;k<27;k++){//get all row number
-						if(anotherSpace[k]<floor(j/12)+12&&anotherSpace[k]>floor((j-1)/12)+12){
-                                                	space=anotherSpace[k];
-							for(int t=1;t<10;t++){
-								if(rowCheck[t]==0){
-		                                                        Question[space]=t;
-									rowCheck[t]=1;
-									break;
-									}
-                                				}
-						}
-						else if ((anotherSpace[k]-j)%12==0){//get all column
-							space=anotherSpace[k];
-							for(int t=1;t<10;t++){
-								if(colCheck[t]==0){
-									Question[space]=t;
-									colCheck[t]=1;
-									break;
-							
-								}
-							}
-						}
-						else if(){//get all cell
-							space=anotherSpace[k];
-                                                        for(int t=1;t<10;t++){
-                                                                if(cellCheck[t]==0){
-                                                                        Question[space]=t;
-                                                                        cellCheck[t]=1;
-                                                                        break;
-
-                                                                }
-							}
-						}
-						else break;
-						}
-					checkUnity()
-					
-
-
-
-}
-					
-                                                                                               
-                                                              
-                                                                       
-                                                                          
-							
-			for(tem=i;tem<sudokuSize;tem+=12)
-}	
+                                                        }
+}                                                                                                                                     }	
 }
 }
-}*/
+}
