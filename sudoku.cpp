@@ -2,8 +2,12 @@
 #include<time.h>
 #include<stdlib.h>
 #include<iomanip>
+#include<stdio.h>
 #include"sudoku.h"
 using namespace std;
+const int sudokuSize=144;
+int readinQuestion[sudokuSize];
+int temAnswer[sudokuSize]={};
 sudoku::sudoku(){
 	for(int i=0;i<sudokuSize;i++){
 		map[i]=0;
@@ -34,7 +38,7 @@ bool sudoku::isCorrect(int answerMap[]){
 		for(int j=0;j<12;j++){
 			checkArr[i]=answerMap[i+j*12];
 		}
-		if(checkUnity(checkArr==false)) return false;
+		if(checkUnity(checkArr)==false) return false;
 	}
 	for(int i=0;i<12;i+=12){    //check the cell
 		for(int j=0;j<12;j+=4){
@@ -55,6 +59,8 @@ bool sudoku::isCorrect(int answerMap[]){
 				}
 			}
 return true;
+}
+}
 }
 void sudoku::GiveQuestion(){
 	srand(time(0));
@@ -102,93 +108,74 @@ void sudoku::GiveQuestion(){
         	if((i+1)%12==0)cout<<endl;
 }
 }
-void sudoku::Readin(int map[sudokuSize]){
-	int readinQuestion[sudokuSize];	
+void sudoku::ReadIn(){	
 	for(int i=0;i<sudokuSize;i++){
-		 readinQuestion[i]=map[i];
-		 cout<<readinQuestion[i];	
+		 readinQuestion[i]=sudoku::map[i];
+		 cout<<setw(2)<<readinQuestion[i];
+		if((i+1)%12==0)cout<<endl;	
 }
 }
-void sudoku::Solve(int Question[sudokuSize]){
-	 int tem=floor(i/12),rowCheck[10]={},colCheck[10]={},cellCheck[10]={};
-         int temAnswer[sudokuSize]={};
-	for(int i=0;i<sudukuSize;i++){
-		if(Question[i]==0){
-			for(tem;tem<floor(i/12)+12;tem++){   //select row
-				if(Question[tem]>0)rowCheck[Question[tem]]++;
-				else if(Question[tem]==-1)rowCheck[0]++;
+void sudoku::Solve(){ 
+	 int rowCheck[10]={};int colCheck[10]={};int cellCheck[10]={};int test[10]={};int tem;
+         int temAnswer[sudokuSize]={}; int chanceNumber[10]={};int ctr=0;
+	for(int i=0;i<sudokuSize;i++) temAnswer[i]=readinQuestion[i];
+	for(int i=0;i<sudokuSize;i++){
+		tem=i/12;
+		if(readinQuestion[i]==0){
+			for(tem;tem<(i/12)+12;tem++){   //select row
+				if(readinQuestion[tem]>0)rowCheck[readinQuestion[tem]]++;
+				else if(readinQuestion[tem]==-1)rowCheck[0]++;
 			}
 			for(tem=(i%12);tem<sudokuSize;tem+=12){//select column
-				if(Question[tem]>0) colCheck[Question[tem]]++;
-				else if (Question[tem]==-1) colCheck[0]++;
+				if(readinQuestion[tem]>0) colCheck[readinQuestion[tem]]++;
+				else if (readinQuestion[tem]==-1) colCheck[0]++;
 			}		
-			tem=3((i%12)/3)+36((i/12)/3);		
+			tem=3*((i%12)/3)+36*((i/12)/3);		
 			for(int k=tem;k<tem+25;k+=12){ //select cell                    		
                              	for(int t=0;t<3;t++){
-                                   	if(Question[tem+t]>0)cellCheck[Question[tem]]++;
-					else if(Question[tem+t]==-1)cellCheck[0]++;
+                                   	if(readinQuestion[tem+t]>0)cellCheck[readinQuestion[tem]]++;
+					else if(readinQuestion[tem+t]==-1)cellCheck[0]++;
                                 			}
                        				 }
-                       									
-			int chanceNumber[10]={},ctr=0;
 			for(int j=1;j<10;j++){ //test number
-				if(rowCheck[j]==0&&colCheck[j]==0&&cellCheck==[0]) {
+				if(rowCheck[j]==0&&colCheck[j]==0&&cellCheck[j]==0) {
 					chanceNumber[ctr]=j;
 					ctr++;
 				}
 			}
-			if(chanceNumber[1]==0)	Question[i]=chanceNumber[0];//只有一個可能
-			
-			else {//有兩個以上可能
-				for(int j=0;j<9;j++){
-					
-				}
 
-
-			} 
-				
-				
-			
-
-
-
-
-
-
-				for(int j=1;j<10;j++){
-				if(chanceNumber[j]==1){
-					temAnswer[i]=j;
-					chanceNumber[j]=0;
-				}
-				break;
-			}
-		if((i+1)%12==0){//check row
-			for(int j=0;j<12;j++){
-				if(temAnswer[i]==0){
-				temAnswer[j]=Question[i-11+j];
-				}
-			}
-			if(checkUnity(temAnswer)==0){
-				
+			if(chanceNumber[1]==0)	temAnswer[i]=readinQuestion[i]=chanceNumber[0];//只有一個可能			
+			else {   //兩個以上可能
+				for(int k=0;k<10;k++) rowCheck[k]=0;
+				for(int k=i-11;k<=i;k++){                                       
+                                       rowCheck[temAnswer[k]]=1;
+                                }
+				for(int j=0;j<10;j++){					
+					if(chanceNumber[j]!=0&&temAnswer[i]!=chanceNumber[j]&&rowCheck[chanceNumber[j]]==0){
+						temAnswer[i]=chanceNumber[j];
+					}
+				}						
 			}
 		}
-		if((i+1)%36==0){
-			
-
-
-
-
+	}
+			/*if((i+1)%12==0){//check row
+				ctr=0;
+				for(int j=i-11;j<=i;j++){
+					test[ctr]=temAnswer[j];
+				}
+				if(checkUnity(test)==0){
+					sudoku::Solve(Question);
+				}
+				else {
+					for(int j=i-11;j<=i;j++) Question[j]=temAnswer[j];                               						}
+			}*/
+	if(isCorrect(temAnswer)==1){
+		for(int i=0;i<sudokuSize;i++){
+			cout<<setw(2)<<temAnswer[i];
+               		if((i+1)%12==0)cout<<endl;
 		}
-			
-		
+	}
+	else {sudoku::Solve();}
 
-
-
-		}
-			
-
-                                                        }
-}                                                                                                                                     }	
 }
-}
-}
+
