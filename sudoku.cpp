@@ -75,7 +75,6 @@ void sudoku::GiveQuestion(){
 			switchChar[i]=rand()%9+1;
 }
 		check[switchChar[i]]++;
-
 }
         for(int i=0;i<sudokuSize;i++){
                 switch(sample[i]){
@@ -110,9 +109,7 @@ void sudoku::GiveQuestion(){
 }
 void sudoku::ReadIn(){	
 	for(int i=0;i<sudokuSize;i++){
-		 readinQuestion[i]=sudoku::map[i];
-		 cout<<setw(2)<<readinQuestion[i];
-		if((i+1)%12==0)cout<<endl;	
+		 readinQuestion[i]=sudoku::map[i];	
 }
 }
 void sudoku::Solve(){ 
@@ -146,7 +143,7 @@ void sudoku::Solve(){
 
 			if(chanceNumber[1]==0)	temAnswer[i]=readinQuestion[i]=chanceNumber[0];//只有一個可能			
 			else {   //兩個以上可能
-				for(int k=0;k<10;k++) rowCheck[k]=0;
+				for(int t=0;t<10;t++) rowCheck[t]=0;
 				for(int k=i-11;k<=i;k++){                                       
                                        rowCheck[temAnswer[k]]=1;
                                 }
@@ -158,24 +155,13 @@ void sudoku::Solve(){
 			}
 		}
 	}
-			/*if((i+1)%12==0){//check row
-				ctr=0;
-				for(int j=i-11;j<=i;j++){
-					test[ctr]=temAnswer[j];
-				}
-				if(checkUnity(test)==0){
-					sudoku::Solve(Question);
-				}
-				else {
-					for(int j=i-11;j<=i;j++) Question[j]=temAnswer[j];                               						}
-			}*/
-	if(isCorrect(temAnswer)==1){
+			
+	if(isCorrect(temAnswer)==true){
 		for(int i=0;i<sudokuSize;i++){
 			cout<<setw(2)<<temAnswer[i];
                		if((i+1)%12==0)cout<<endl;
 		}
 	}
-	else {sudoku::Solve();}
-
+	else Solve();
 }
 
