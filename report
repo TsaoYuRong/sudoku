@@ -1,0 +1,9 @@
+1.givequestion
+先用英文字母做一個模型,再把他帶換成數字,產生一個數獨,之後再隨機挖空格,並把題目存進data member裡
+
+2.ReadIn
+return type 設為sudoku所以return this pointer就等於回傳自己
+
+3.Solve
+先用一個temAnswer的趁列紀錄暫時答案,找到第一個0之後檢查他的同一列和同一行和該九宮格內的數字,找出三方都缺的數字極有可能事答案,再把答案套進去試試看如果該格正確,即呼叫自己那個函數做recursive直到答案對
+
