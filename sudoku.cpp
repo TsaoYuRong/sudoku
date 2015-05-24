@@ -6,12 +6,9 @@
 #include"sudoku.h"
 using namespace std;
 const int sudokuSize=144;
-int readinQuestion[sudokuSize];
 int temAnswer[sudokuSize]={};
 sudoku::sudoku(){
-	for(int i=0;i<sudokuSize;i++){
-		map[i]=0;
-}
+	for(int i=0;i<sudokuSize;i++) map[i]=0;
 }
 bool sudoku::checkUnity(int arr[]){//check 12 numbers
 	int ctrArr[10]={};
@@ -102,36 +99,93 @@ void sudoku::GiveQuestion(){
        		tempNum[spaceNum]=1;
 }	
 	for(int i=0;i<sudokuSize;i++) {
-        	sudoku::map[i]=Question[i];
+        	map[i]=Question[i];
        		cout<<setw(2)<<Question[i];
         	if((i+1)%12==0)cout<<endl;
 }
 }
-void sudoku::ReadIn(){	
-	for(int i=0;i<sudokuSize;i++){
-		 readinQuestion[i]=sudoku::map[i];	
+sudoku sudoku::ReadIn(){	
+return *this;
 }
-}
-void sudoku::Solve(){ 
-	 int rowCheck[10]={};int colCheck[10]={};int cellCheck[10]={};int test[10]={};int tem;
-         int temAnswer[sudokuSize]={}; int chanceNumber[10]={};int ctr=0;
-	for(int i=0;i<sudokuSize;i++) temAnswer[i]=readinQuestion[i];
+int sudoku::getFirstZero(int temAnswer[sudokuSize]){
 	for(int i=0;i<sudokuSize;i++){
+		if(temAnswer[i]==0) return i;
+	}
+}
+void sudoku::setElement(int zero,int num){
+	map[zero]=num;
+}
+
+bool sudoku::Solve(sudoku sample){
+
+	int rowCheck[10]={};int colCheck[10]={};int cellCheck[10]={};int test[10]={};int tem;
+        int temAnswer[sudokuSize]={}; int chanceNumber[10]={};int ctr=0,firstZero;
+	for(int i=0;i<sudokuSize;i++) temAnswer[i]=sample.map[i];
+	
+	firstZero=getFirstZero(temAnswer);
+	if(firstZero == -1)
+	{ // end condition
+  		if(sample.isCorrect(sample.map))
+  		{
+			for(int i=0;i<sudokuSize;i++){
+  				temAnswer[i]= sample.map[i];
+			}
+  			return true;
+  		}
+  		else	return false;
+  	}
+	else
+ 	{
+                        for(tem;tem<(firstZero/12)+12;tem++){   //select row
+                                if(sample.map[tem]>0)rowCheck[sample.map[tem]]++;
+                                else if(sample.map[tem]==-1)rowCheck[0]++;
+                        }
+                        for(tem=(firstZero%12);tem<sudokuSize;tem+=12){//select column
+                                if((sample.map[tem]>0)) colCheck[sample.map[tem]]++;
+                                else if ((sample.map[tem]==-1)) colCheck[0]++;
+                        }
+                        tem=3*((firstZero%12)/3)+36*((firstZero/12)/3);
+                        for(int k=tem;k<tem+25;k+=12){ //select cell
+                                for(int t=0;t<3;t++){
+                                        if((sample.map[tem+t]>0))cellCheck[sample.map[tem]]++;
+                                        else if((sample.map[tem+t]==-1))cellCheck[0]++;
+                                                        }
+                                                 }
+                        for(int j=1;j<10;j++){ //test number
+                                if(rowCheck[j]==0&&colCheck[j]==0&&cellCheck[j]==0) {
+                                        chanceNumber[ctr]=j;
+                                        ctr++;
+                                }
+                        }
+                        if(chanceNumber[1]==0)  temAnswer[firstZero]=sample.map[firstZero]=chanceNumber[0];//只有一個可能
+
+
+		for(int num=1; num<=ctr; ++num)
+		{
+			 sample.setElement(firstZero,chanceNumber[ctr]);
+			 if(Solve(sample))
+ 			 return true;
+ 		}
+ 		return false;
+ 	}
+  }
+
+/*	for(int i=0;i<sudokuSize;i++){
 		tem=i/12;
-		if(readinQuestion[i]==0){
+		if(sample.map[i]==0){
 			for(tem;tem<(i/12)+12;tem++){   //select row
-				if(readinQuestion[tem]>0)rowCheck[readinQuestion[tem]]++;
-				else if(readinQuestion[tem]==-1)rowCheck[0]++;
+				if(sample.map[tem]>0)rowCheck[sample.map[tem]]++;
+				else if(sample.map[tem]==-1)rowCheck[0]++;
 			}
 			for(tem=(i%12);tem<sudokuSize;tem+=12){//select column
-				if(readinQuestion[tem]>0) colCheck[readinQuestion[tem]]++;
-				else if (readinQuestion[tem]==-1) colCheck[0]++;
+				if((sample.map[tem]>0)) colCheck[sample.map[tem]]++;
+				else if ((sample.map[tem]==-1)) colCheck[0]++;
 			}		
 			tem=3*((i%12)/3)+36*((i/12)/3);		
 			for(int k=tem;k<tem+25;k+=12){ //select cell                    		
                              	for(int t=0;t<3;t++){
-                                   	if(readinQuestion[tem+t]>0)cellCheck[readinQuestion[tem]]++;
-					else if(readinQuestion[tem+t]==-1)cellCheck[0]++;
+                                   	if((sample.map[tem+t]>0))cellCheck[sample.map[tem]]++;
+					else if((sample.map[tem+t]==-1))cellCheck[0]++;
                                 			}
                        				 }
 			for(int j=1;j<10;j++){ //test number
@@ -140,9 +194,8 @@ void sudoku::Solve(){
 					ctr++;
 				}
 			}
-
-			if(chanceNumber[1]==0)	temAnswer[i]=readinQuestion[i]=chanceNumber[0];//只有一個可能			
-			else {   //兩個以上可能
+			if(chanceNumber[1]==0)	temAnswer[i]=sample.map[i]=chanceNumber[0];//只有一個可能			
+		else {   //兩個以上可能
 				for(int t=0;t<10;t++) rowCheck[t]=0;
 				for(int k=i-11;k<=i;k++){                                       
                                        rowCheck[temAnswer[k]]=1;
@@ -153,7 +206,7 @@ void sudoku::Solve(){
 					}
 				}						
 			}
-		}
+	}
 	}
 			
 	if(isCorrect(temAnswer)==true){
@@ -162,6 +215,7 @@ void sudoku::Solve(){
                		if((i+1)%12==0)cout<<endl;
 		}
 	}
-	else Solve();
-}
+	else Solve(sample);
 
+}
+*/
