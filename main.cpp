@@ -3,8 +3,9 @@
 using namespace std;
 int main(){
 	sudoku test;
+	sudoku Test;
 	test.GiveQuestion();
-	test.ReadIn();
-	test.Solve();
+	Test=test.ReadIn();
+	test.Solve(Test);
 	return 0;
 }
